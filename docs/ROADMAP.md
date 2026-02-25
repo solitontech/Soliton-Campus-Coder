@@ -26,9 +26,9 @@
 
 ### Tasks
 
-- [ ] **0.1** Initialize Next.js 14+ project with TypeScript (App Router)
-- [ ] **0.2** Configure Tailwind CSS v3
-- [ ] **0.3** Install and configure shadcn/ui
+- [x] **0.1** Initialize Next.js 14+ project with TypeScript (App Router) *(Next.js 16.1.6 with Turbopack)*
+- [x] **0.2** Configure Tailwind CSS *(v4 — latest, compatible with shadcn/ui)*
+- [x] **0.3** Install and configure shadcn/ui *(zinc base color, CSS variables)*
 - [ ] **0.4** Install TanStack Query + TanStack Store
 - [ ] **0.5** Set up Prisma with PostgreSQL
 - [ ] **0.6** Define complete Prisma schema (all models from architecture doc)
@@ -39,7 +39,7 @@
 - [ ] **0.11** Set up Playwright for E2E
 - [ ] **0.12** Create base layout components (admin sidebar, candidate layout)
 - [ ] **0.13** Create seed script for development data
-- [ ] **0.14** Configure environment variables (`.env.example`)
+- [x] **0.14** Configure environment variables (`.env.example`) *(includes Judge0 config)*
 
 - [ ] **0.15** Set up Judge0 locally using Docker Compose (for development)
   - [ ] 0.15.1 Create `/opt/judge0/` directory with `docker-compose.yml`, `judge0.conf`, `.env`
