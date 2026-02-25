@@ -29,7 +29,7 @@
 - [x] **0.1** Initialize Next.js 14+ project with TypeScript (App Router) *(Next.js 16.1.6 with Turbopack)*
 - [x] **0.2** Configure Tailwind CSS *(v4 — latest, compatible with shadcn/ui)*
 - [x] **0.3** Install and configure shadcn/ui *(zinc base color, CSS variables)*
-- [ ] **0.4** Install TanStack Query + TanStack Store
+- [x] **0.4** Install TanStack Query + TanStack Store *(react-query, @tanstack/store, react-store)*
 - [ ] **0.5** Set up Prisma with PostgreSQL
 - [ ] **0.6** Define complete Prisma schema (all models from architecture doc)
 - [ ] **0.7** Run initial migration
