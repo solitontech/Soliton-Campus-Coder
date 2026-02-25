@@ -1,0 +1,209 @@
+// Soliton Campus Coder — Prisma Schema
+// All models as defined in ARCHITECTURE.md §4.2
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ──────────────────────────────────────────────────────────
+// Auth & Users
+// ──────────────────────────────────────────────────────────
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  createdBy    String? // admin who created this admin
+
+  @@map("admins")
+}
+
+model Candidate {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  createdAt    DateTime      @default(now())
+  invitations  Invitation[]
+  testSessions TestSession[]
+
+  @@map("candidates")
+}
+
+// ──────────────────────────────────────────────────────────
+// Question Bank
+// ──────────────────────────────────────────────────────────
+
+model Question {
+  id              String         @id @default(cuid())
+  title           String
+  description     String         @db.Text // Markdown
+  difficulty      Difficulty     @default(MEDIUM)
+  boilerplateCode String?        @db.Text
+  language        Language       @default(C)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdById     String
+  testCases       TestCase[]
+  testQuestions   TestQuestion[]
+
+  @@map("questions")
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum Language {
+  C
+  CPP
+}
+
+model TestCase {
+  id                String             @id @default(cuid())
+  questionId        String
+  question          Question           @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  input             String             @db.Text
+  output            String             @db.Text
+  isPublic          Boolean            @default(false)
+  order             Int                @default(0)
+  submissionResults SubmissionResult[]
+
+  @@map("test_cases")
+}
+
+// ──────────────────────────────────────────────────────────
+// Tests
+// ──────────────────────────────────────────────────────────
+
+model Test {
+  id           String         @id @default(cuid())
+  title        String
+  instructions String         @db.Text // Markdown shown to candidate
+  durationMins Int // default duration in minutes
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  createdById  String
+  questions    TestQuestion[]
+  invitations  Invitation[]
+
+  @@map("tests")
+}
+
+model TestQuestion {
+  id         String   @id @default(cuid())
+  testId     String
+  test       Test     @relation(fields: [testId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  order      Int      @default(0)
+
+  @@unique([testId, questionId])
+  @@map("test_questions")
+}
+
+// ──────────────────────────────────────────────────────────
+// Invitations
+// ──────────────────────────────────────────────────────────
+
+model Invitation {
+  id           String           @id @default(cuid())
+  token        String           @unique @default(cuid()) // one-time link token
+  testId       String
+  test         Test             @relation(fields: [testId], references: [id])
+  candidateId  String
+  candidate    Candidate        @relation(fields: [candidateId], references: [id])
+  scheduledAt  DateTime // date + time the test opens
+  durationMins Int // duration for this specific invite
+  status       InvitationStatus @default(PENDING)
+  createdAt    DateTime         @default(now())
+  emailSentAt  DateTime?
+  testSession  TestSession?
+
+  @@map("invitations")
+}
+
+enum InvitationStatus {
+  PENDING // email sent, not started
+  STARTED // test in progress
+  COMPLETED // candidate finished
+  FAILED // proctoring violation or time expired
+  EXPIRED // scheduledAt + durationMins passed without starting
+}
+
+// ──────────────────────────────────────────────────────────
+// Test Sessions
+// ──────────────────────────────────────────────────────────
+
+model TestSession {
+  id            String         @id @default(cuid())
+  invitationId  String         @unique
+  invitation    Invitation     @relation(fields: [invitationId], references: [id])
+  candidateId   String
+  candidate     Candidate      @relation(fields: [candidateId], references: [id])
+  startedAt     DateTime       @default(now())
+  finishedAt    DateTime?
+  status        SessionStatus  @default(IN_PROGRESS)
+  failReason    String? // e.g. "TAB_SWITCH", "BROWSER_CLOSE", "TIME_EXPIRED"
+  submissions   Submission[]
+  proctorEvents ProctorEvent[]
+
+  @@map("test_sessions")
+}
+
+enum SessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+model ProctorEvent {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   TestSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  eventType String // VISIBILITY_CHANGE, BLUR, COPY, PASTE, BEFOREUNLOAD
+  timestamp DateTime    @default(now())
+  metadata  Json?
+
+  @@map("proctor_events")
+}
+
+// ──────────────────────────────────────────────────────────
+// Submissions
+// ──────────────────────────────────────────────────────────
+
+model Submission {
+  id          String             @id @default(cuid())
+  sessionId   String
+  session     TestSession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  questionId  String
+  code        String             @db.Text
+  language    Language
+  submittedAt DateTime           @default(now())
+  results     SubmissionResult[]
+
+  @@unique([sessionId, questionId]) // one submission per question per session
+  @@map("submissions")
+}
+
+model SubmissionResult {
+  id              String     @id @default(cuid())
+  submissionId    String
+  submission      Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  testCaseId      String
+  testCase        TestCase   @relation(fields: [testCaseId], references: [id])
+  passed          Boolean
+  actualOutput    String?    @db.Text
+  executionTimeMs Int?
+  error           String?    @db.Text // compilation or runtime error
+
+  @@map("submission_results")
+}

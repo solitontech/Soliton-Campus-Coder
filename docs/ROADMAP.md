@@ -30,11 +30,11 @@
 - [x] **0.2** Configure Tailwind CSS *(v4 — latest, compatible with shadcn/ui)*
 - [x] **0.3** Install and configure shadcn/ui *(zinc base color, CSS variables)*
 - [x] **0.4** Install TanStack Query + TanStack Store *(react-query, @tanstack/store, react-store)*
-- [ ] **0.5** Set up Prisma with PostgreSQL
-- [ ] **0.6** Define complete Prisma schema (all models from architecture doc)
+- [x] **0.5** Set up Prisma with PostgreSQL *(Prisma v7.4.1 with @prisma/adapter-pg)*
+- [x] **0.6** Define complete Prisma schema (all models from architecture doc) *(11 models, 5 enums)*
 - [ ] **0.7** Run initial migration
 - [ ] **0.8** Set up NextAuth.js v5 for admin authentication
-- [ ] **0.9** Create Prisma client singleton (`lib/db.ts`)
+- [x] **0.9** Create Prisma client singleton (`lib/db.ts`) *(with driver adapter + globalThis singleton)*
 - [ ] **0.10** Set up Vitest + React Testing Library
 - [ ] **0.11** Set up Playwright for E2E
 - [ ] **0.12** Create base layout components (admin sidebar, candidate layout)
