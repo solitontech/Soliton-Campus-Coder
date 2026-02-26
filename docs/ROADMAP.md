@@ -339,6 +339,15 @@
     - [ ] Set `JUDGE0_URL=http://localhost:2358` and `JUDGE0_AUTH_TOKEN` in the app's production env
   - [ ] 6.8.6 Judge0 smoke test on production server (curl Hello World submission)
   - [ ] 6.8.7 Add Judge0 container health check to monitoring (e.g. UptimeRobot internal probe)
+  - [ ] 6.8.8 Comprehensive `README.md`
+    - [ ] Project overview and features
+    - [ ] Tech stack summary
+    - [ ] Local development setup — **macOS** (Postgres.app, trust auth, no password)
+    - [ ] Local development setup — **Linux** (standard PostgreSQL, password auth)
+    - [ ] Environment variables reference (`.env` explained)
+    - [ ] Running migrations and seed data
+    - [ ] Judge0 setup (dev vs production)
+    - [ ] Building and deploying to production
 
 ### Definition of Done
 - All E2E tests pass
