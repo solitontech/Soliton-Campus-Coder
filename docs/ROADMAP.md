@@ -41,11 +41,11 @@
 - [x] **0.13** Create seed script for development data *(admin + 3 questions with test cases, idempotent)*
 - [x] **0.14** Configure environment variables (`.env.example`) *(includes Judge0 config)*
 
-- [ ] **0.15** Set up Judge0 locally using Docker Compose (for development)
-  - [ ] 0.15.1 Create `/opt/judge0/` directory with `docker-compose.yml`, `judge0.conf`, `.env`
-  - [ ] 0.15.2 Start Judge0 and verify `GET http://localhost:2358/system_info` returns OK
-  - [ ] 0.15.3 Add `JUDGE0_URL` and `JUDGE0_AUTH_TOKEN` to `.env.example`
-  - [ ] 0.15.4 Smoke test: submit a "Hello World" C program via `curl` and confirm output
+- [x] **0.15** Set up Judge0 locally using Docker Compose (for development) *(Judge0 CE v1.13.1, Postgres 16.2, Redis 7.2.4)*
+  - [x] 0.15.1 Create `judge0/` directory with `docker-compose.yml`, `judge0.conf` *(project-local for dev; `/opt/judge0/` for production Linux)*
+  - [x] 0.15.2 Start Judge0 and verify `GET http://localhost:2358/system_info` returns OK *(requires `deprecatedCgroupv1: true` in Docker Desktop on macOS)*
+  - [x] 0.15.3 Add `JUDGE0_URL` and `JUDGE0_AUTH_TOKEN` to `.env.example`
+  - [x] 0.15.4 Smoke test: submit a "Hello World" C program via `curl` and confirm output *(status: Accepted, stdout: "Hello, World!")*
 
 ### Definition of Done
 - App runs locally with `npm run dev`
